@@ -36,7 +36,6 @@ export const useQuery = <TKey extends string>({
     const [data, setData] = useState<RowDataType<TKey>[] | null>(null)
 
     const runQueryAsync = useCallback(async () => {
-        console.log('called query.')
         setLoading(true)
         const response = await query.execute(connection, dbName, readQuery)
 
