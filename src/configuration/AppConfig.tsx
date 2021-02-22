@@ -8,7 +8,12 @@ import RouterConfig from './RouterConfig'
 
 const AppConfig: FC = ({ children }) => {
     return (
-        <StardogProvider>
+        <StardogProvider
+            dbName="covid19nyt"
+            username="anonymous"
+            password="anonymous"
+            endpoint="https://express.stardog.cloud:5820"
+        >
             <Router>
                 <RouterConfig>
                     <CssBaseline />

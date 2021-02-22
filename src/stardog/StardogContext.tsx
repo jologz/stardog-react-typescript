@@ -11,13 +11,25 @@ export const StardogContext = createContext<StardogContextProps>({
     dbName: '',
 })
 
-export const StardogProvider: FC = ({ children }) => {
+export interface StardogProviderProps {
+    username: string
+    password: string
+    endpoint: string
+    dbName: string
+}
+
+export const StardogProvider: FC<StardogProviderProps> = ({
+    username,
+    password,
+    endpoint,
+    dbName,
+    children,
+}) => {
     const connection = new Connection({
-        username: 'anonymous',
-        password: 'anonymous',
-        endpoint: 'https://express.stardog.cloud:5820',
+        username,
+        password,
+        endpoint,
     })
-    const dbName = 'covid19nyt'
 
     return (
         <StardogContext.Provider

@@ -1,52 +1,20 @@
-import { RowsProp } from '@material-ui/data-grid'
-import { FC, useEffect, useState } from 'react'
+import { ColDef, RowsProp } from '@material-ui/data-grid'
+import { caseNumbersQuery } from 'queries/caseNumbersQuery'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'stardog/useQuery'
 import CaseNumbersTable, {
     CaseNumbersDataKey,
-    CaseNumbersTableProps,
     RowPropType,
 } from './components/CaseNumbersTable'
 
 const HomePage: FC = () => {
-    const { loading, error, data } = useQuery<CaseNumbersDataKey>({
-        query: `PREFIX wd: <http://www.wikidata.org/entity/>
-        PREFIX wdt: <http://www.wikidata.org/prop/direct/>
-        
-        SELECT ?countyName ?cases ?population ?percentCases 
-        {
-            # get the latest date
-            { SELECT (max(?d) as ?date) { ?r :date ?d } }
-        
-            # get all the reports for the latest date
-            ?report
-                :cases ?cases  ;
-                :date ?date ;                
-                :county [
-                    rdfs:label ?countyName ;
-                    :fips ?fips
-                ]                
-        
-            # look up the population of the county from Wikidata using the FIPS code
-            SERVICE <https://query.wikidata.org/sparql> 
-            {
-                [
-                    wdt:P1082 ?population ;
-                    wdt:P882 ?fips
-                ]     
-            }   
-        
-            # compute percentages
-            BIND(roundHalfToEven((?cases / ?population) * 100, 2) AS ?percentCases)
-        }
-        ORDER BY desc(?percentCases)`,
-    })
-
     const [
-        caseNumbersTableProps,
-        setCaseNumbersTableProps,
-    ] = useState<CaseNumbersTableProps>({
-        rows: [],
-        columns: [
+        runCaseNumbersQuery,
+        { loading, error, data },
+    ] = useQuery<CaseNumbersDataKey>()
+
+    const columns = useMemo(
+        (): ColDef[] => [
             {
                 field: 'countyName' as CaseNumbersDataKey,
                 headerName: 'County Name',
@@ -68,9 +36,10 @@ const HomePage: FC = () => {
                 width: 150,
             },
         ],
-    })
+        []
+    )
 
-    const rows: RowsProp = [{}]
+    const [caseNumbersRows, setCaseNumbersRows] = useState<RowsProp>([])
 
     // extract only the values from DataProps
     // and map it back to the CaseNumbersDataKey record.
@@ -94,16 +63,21 @@ const HomePage: FC = () => {
             return updatedObj
         })
 
-        setCaseNumbersTableProps({
-            ...caseNumbersTableProps,
-            rows,
-        })
+        setCaseNumbersRows(rows)
     }, [data])
+
+    useEffect(() => {
+        runCaseNumbersQuery({
+            readQuery: caseNumbersQuery,
+        })
+    }, [runCaseNumbersQuery])
 
     if (loading) return <div>Loading...</div>
     if (error) return <div>Error getting data...</div>
 
-    return <CaseNumbersTable {...caseNumbersTableProps} />
+    console.log(process.env.REACT_APP_GOOGLE_API_KEY)
+
+    return <CaseNumbersTable rows={caseNumbersRows} columns={columns} />
 }
 
 export default HomePage
