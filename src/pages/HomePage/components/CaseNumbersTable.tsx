@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core'
 import { ColDef, DataGrid, RowsProp } from '@material-ui/data-grid'
 
 export type CaseNumbersDataKey =
@@ -15,9 +16,14 @@ export interface CaseNumbersTableProps {
 
 const CaseNumbersTable = ({ rows, columns }: CaseNumbersTableProps) => {
     return (
-        <div style={{ width: 710, height: 600 }}>
-            <DataGrid rows={rows} columns={columns} />
-        </div>
+        <>
+            <Typography component="h2">
+                COVID19 Counties With Most Cases
+            </Typography>
+            <div style={{ width: 710, height: 600 }}>
+                <DataGrid rows={rows} columns={columns} />
+            </div>
+        </>
     )
 }
 

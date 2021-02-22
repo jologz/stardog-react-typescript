@@ -53,6 +53,11 @@ const HomePage: FC = () => {
                 width: 250,
             },
             {
+                field: 'percentCases' as CaseNumbersDataKey,
+                headerName: 'Percent Cases',
+                width: 150,
+            },
+            {
                 field: 'population' as CaseNumbersDataKey,
                 headerName: 'Population',
                 width: 150,
@@ -60,11 +65,6 @@ const HomePage: FC = () => {
             {
                 field: 'cases' as CaseNumbersDataKey,
                 headerName: 'Cases',
-                width: 150,
-            },
-            {
-                field: 'percentCases' as CaseNumbersDataKey,
-                headerName: 'Percent Cases',
                 width: 150,
             },
         ],
