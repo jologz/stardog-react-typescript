@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/stardog-react-typescript/static/js/main.b98b3fb3.chunk.js",
-    "main.js.map": "/stardog-react-typescript/static/js/main.b98b3fb3.chunk.js.map",
+    "main.js": "/stardog-react-typescript/static/js/main.5af9e867.chunk.js",
+    "main.js.map": "/stardog-react-typescript/static/js/main.5af9e867.chunk.js.map",
     "runtime-main.js": "/stardog-react-typescript/static/js/runtime-main.caa9d463.js",
     "runtime-main.js.map": "/stardog-react-typescript/static/js/runtime-main.caa9d463.js.map",
     "static/js/2.58797bae.chunk.js": "/stardog-react-typescript/static/js/2.58797bae.chunk.js",
@@ -12,6 +12,6 @@
   "entrypoints": [
     "static/js/runtime-main.caa9d463.js",
     "static/js/2.58797bae.chunk.js",
-    "static/js/main.b98b3fb3.chunk.js"
+    "static/js/main.5af9e867.chunk.js"
   ]
 }
