@@ -63,10 +63,10 @@ const HeatMapPage = () => {
             <GoogleMapReact
                 bootstrapURLKeys={{
                     key: envConfig.googleApiKey ?? '',
+                    libraries: ['visualization'],
                 }}
                 defaultCenter={defaultCenter}
                 defaultZoom={defaultZoom}
-                heatmapLibrary={true}
                 heatmap={{
                     positions,
                     options: {
