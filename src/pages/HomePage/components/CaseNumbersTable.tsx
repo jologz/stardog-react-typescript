@@ -6,6 +6,8 @@ export type CaseNumbersDataKey =
     | 'countyName'
     | 'percentCases'
     | 'population'
+    | 'lat'
+    | 'lng'
 
 export type RowPropType = 'id' | CaseNumbersDataKey
 
@@ -20,7 +22,7 @@ const CaseNumbersTable = ({ rows, columns }: CaseNumbersTableProps) => {
             <Typography component="h2">
                 COVID19 Counties With Most Cases
             </Typography>
-            <div style={{ width: 710, height: 600 }}>
+            <div style={{ width: 1010, height: 600 }}>
                 <DataGrid rows={rows} columns={columns} />
             </div>
         </>

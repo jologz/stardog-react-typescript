@@ -1,13 +1,13 @@
+import { mainRouting } from 'mainRouting'
 import NotFoundPage from 'pages/NotFoundPage'
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { mainRouting } from './mainRouting'
 
 const App = () => {
     return (
         <Switch>
-            {mainRouting().map(({ ChildComponent, ...rest }) => (
-                <Route {...rest}>
+            {mainRouting().map(({ ChildComponent, computedPath, ...rest }) => (
+                <Route path={computedPath} {...rest}>
                     <ChildComponent />
                 </Route>
             ))}

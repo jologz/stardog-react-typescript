@@ -1,7 +1,11 @@
 export const caseNumbersQuery = `PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX psv: <http://www.wikidata.org/prop/statement/value/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
 
-SELECT ?countyName ?cases ?population ?percentCases 
+SELECT ?countyName ?cases ?population ?percentCases ?lat ?lng
 {
     # get the latest date
     { SELECT (max(?d) as ?date) { ?r :date ?d } }
@@ -13,17 +17,20 @@ SELECT ?countyName ?cases ?population ?percentCases
         :county [
             rdfs:label ?countyName ;
             :fips ?fips
-        ]                
+        ]    
 
-    # look up the population of the county from Wikidata using the FIPS code
+    # Get coordinates of
     SERVICE <https://query.wikidata.org/sparql> 
     {
-        [
-            wdt:P1082 ?population ;
-            wdt:P882 ?fips
-        ]     
+        SELECT * {
+            ?item wdt:P882 ?fips ;
+                  wdt:P1082 ?population ;
+                  p:P625 ?coordPoint .
+            ?coordPoint psv:P625 ?coord_node .
+            ?coord_node wikibase:geoLongitude ?lng ;
+                        wikibase:geoLatitude ?lat .
+        }
     }   
-
     # compute percentages
     BIND(roundHalfToEven((?cases / ?population) * 100, 2) AS ?percentCases)
 }
