@@ -6,6 +6,10 @@ Google API key is needed for the heatmap.
 
 ![Google HeatMap](./public/covidHeatmapNYT.png)
 
+## Demo
+
+https://jologz.github.io/
+
 ## Environment Variables
 
 -   `REACT_APP_GOOGLE_API_KEY` - Google API Key for Google Maps Javascript
