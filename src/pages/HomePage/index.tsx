@@ -2,7 +2,10 @@ import Link from '@material-ui/core/Link'
 import { ColDef, RowsProp } from '@material-ui/data-grid'
 import { caseNumbersQuery } from 'queries/caseNumbersQuery'
 import { FC, useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
+import { AppState } from 'reduxConfig/appState'
+import { caseNumbersDataUpdateData } from 'reduxConfig/caseNumbers/actions'
 import { useQuery } from 'stardog/useQuery'
 import CaseNumbersTable, {
     CaseNumbersDataKey,
@@ -10,6 +13,8 @@ import CaseNumbersTable, {
 } from './components/CaseNumbersTable'
 
 const HomePage: FC = () => {
+    const { caseNumbersData } = useSelector((state: AppState) => state)
+    const dispatch = useDispatch()
     const [
         runCaseNumbersQuery,
         { loading, error, data },
@@ -58,7 +63,18 @@ const HomePage: FC = () => {
     useEffect(() => {
         if (!data) return
 
-        const rows = data.map((currentDataProp, idx) => {
+        dispatch(caseNumbersDataUpdateData(data))
+    }, [data, dispatch])
+
+    useEffect(() => {
+        if (!caseNumbersData.length) {
+            runCaseNumbersQuery({
+                readQuery: caseNumbersQuery,
+            })
+            return
+        }
+
+        const rows = caseNumbersData.map((currentDataProp, idx) => {
             const currentKeys = Object.keys(
                 currentDataProp
             ) as CaseNumbersDataKey[]
@@ -76,13 +92,7 @@ const HomePage: FC = () => {
         })
 
         setCaseNumbersRows(rows)
-    }, [data])
-
-    useEffect(() => {
-        runCaseNumbersQuery({
-            readQuery: caseNumbersQuery,
-        })
-    }, [runCaseNumbersQuery])
+    }, [caseNumbersData, runCaseNumbersQuery])
 
     if (loading) return <div>Loading...</div>
     if (error) return <div>Error getting data...</div>

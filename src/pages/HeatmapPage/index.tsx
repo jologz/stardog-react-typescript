@@ -3,9 +3,14 @@ import GoogleMapReact, { Coords, Position } from 'google-map-react'
 import { CaseNumbersDataKey } from 'pages/HomePage/components/CaseNumbersTable'
 import { caseNumbersQuery } from 'queries/caseNumbersQuery'
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppState } from 'reduxConfig/appState'
+import { caseNumbersDataUpdateData } from 'reduxConfig/caseNumbers/actions'
 import { useQuery } from 'stardog/useQuery'
 
 const HeatMapPage = () => {
+    const { caseNumbersData } = useSelector((state: AppState) => state)
+    const dispatch = useDispatch()
     const [
         runCaseNumbersQuery,
         { loading, error, data },
@@ -20,40 +25,46 @@ const HeatMapPage = () => {
     const defaultZoom = 5
 
     useEffect(() => {
-        runCaseNumbersQuery({
-            readQuery: caseNumbersQuery,
-        })
-    }, [runCaseNumbersQuery])
+        if (!caseNumbersData.length) {
+            runCaseNumbersQuery({
+                readQuery: caseNumbersQuery,
+            })
+            return
+        }
+
+        const computedPositions = caseNumbersData.map(
+            (currentDataProp, idx) => {
+                const currentKeys = Object.keys(
+                    currentDataProp
+                ) as CaseNumbersDataKey[]
+
+                const position = currentKeys
+                    .filter((currentKey) =>
+                        ['lat', 'lng', 'percentCases'].includes(currentKey)
+                    )
+                    .reduce((accumObj: any, currentKey) => {
+                        if (currentKey === 'percentCases') {
+                            accumObj.weight = Number(
+                                currentDataProp[currentKey].value
+                            )
+                        } else {
+                            accumObj[currentKey] = Number(
+                                currentDataProp[currentKey].value
+                            )
+                        }
+                        return accumObj
+                    }, {}) as Position
+
+                return position
+            }
+        )
+        setPositions(computedPositions)
+    }, [runCaseNumbersQuery, caseNumbersData])
 
     useEffect(() => {
         if (!data) return
-
-        const computedPositions = data.map((currentDataProp, idx) => {
-            const currentKeys = Object.keys(
-                currentDataProp
-            ) as CaseNumbersDataKey[]
-
-            const position = currentKeys
-                .filter((currentKey) =>
-                    ['lat', 'lng', 'percentCases'].includes(currentKey)
-                )
-                .reduce((accumObj: any, currentKey) => {
-                    if (currentKey === 'percentCases') {
-                        accumObj.weight = Number(
-                            currentDataProp[currentKey].value
-                        )
-                    } else {
-                        accumObj[currentKey] = Number(
-                            currentDataProp[currentKey].value
-                        )
-                    }
-                    return accumObj
-                }, {}) as Position
-
-            return position
-        })
-        setPositions(computedPositions)
-    }, [data])
+        dispatch(caseNumbersDataUpdateData(data))
+    }, [data, dispatch])
 
     if (loading) return <div>Loading...</div>
     if (error) return <div>Error getting data...</div>
