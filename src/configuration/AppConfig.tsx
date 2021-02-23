@@ -14,7 +14,7 @@ const AppConfig: FC = ({ children }) => {
             password="anonymous"
             endpoint="https://express.stardog.cloud:5820"
         >
-            <Router>
+            <Router basename="/stardog-react-typescript">
                 <RouterConfig>
                     <CssBaseline />
                     <ThemeProvider theme={baseThemeOverride}>
