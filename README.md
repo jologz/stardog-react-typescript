@@ -8,7 +8,7 @@ Google API key is needed for the heatmap.
 
 ## Demo
 
-https://jologz.github.io/
+https://jologz.github.io/stardog-react-typescript/
 
 ## Environment Variables
 
