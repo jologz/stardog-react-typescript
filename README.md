@@ -4,6 +4,8 @@ This project showcases on how you can utilize [stardog](https://github.com/stard
 
 Google API key is needed for the heatmap.
 
+**Note:** The Google alert box is shown because I am using a free API. You can click `OK`.
+
 ![Google HeatMap](./public/covidHeatmapNYT.png)
 
 ## Demo
